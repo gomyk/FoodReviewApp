@@ -4,10 +4,10 @@ Android app for out toy project
 # Members
 
 ## Moonwon Kim
-![KimMoonWon](./images/KimMoonWon.jpg =100x)
+<img src="./images/KimMoonWon.jpg" width="100" height="120">
 ## Donghyun Kim
-![KimDongHyun](./images/KimDongHyun.jpg =100x)
+<img src="./images/KimDongHyun.jpg" width="100" height="120">
 ## Seokhyun Jung
-![JungSeokhyun](./images/JungSeokhyun.jpg =100x)
+<img src="./images/JungSeokHyun.jpg" width="100" height="120">
 ## Byungik Han
-![HanByungIk](./images/HanByungIk.jpg =100x)
+<img src="./images/HanByungIk.jpg" width="100" height="120">
