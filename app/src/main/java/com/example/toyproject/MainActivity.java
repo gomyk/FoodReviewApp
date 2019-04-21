@@ -1,13 +1,19 @@
 package com.example.toyproject;
 
+
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+
+import net.daum.mf.map.api.MapView;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        MapView mMapView = new MapView(this);
+        ViewGroup mapViewContainer = findViewById(R.id.mapView);
+        mapViewContainer.addView(mMapView);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -26,6 +35,22 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        //Getting Hash Key (Now only debug version)
+        /*
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md;
+                md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String keyHash = new String(Base64.encode(md.digest(), 0));
+                Log.d("@@TEST", keyHash);
+            }
+        } catch (Exception e) {
+            Log.e("name not found", e.toString());
+        }
+        */
     }
 
     @Override
