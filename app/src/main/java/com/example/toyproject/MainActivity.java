@@ -38,9 +38,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "Permission granted");
+            Log.d(TAG, "Permission Granted");
         } else {
-            Log.d(TAG, "Permission Not granted");
+            Log.d(TAG, "Permission Not Granted");
             ActivityCompat.requestPermissions(this, new String[]{
                     Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
