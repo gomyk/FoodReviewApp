@@ -3,14 +3,15 @@ package com.example.toyproject;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -22,20 +23,16 @@ import android.view.ViewGroup;
 
 import com.example.toyproject.utils.CommonContextHolder;
 
-import net.daum.android.map.MapViewEventListener;
-import net.daum.mf.map.api.MapPOIItem;
-import net.daum.mf.map.api.MapPoint;
-import net.daum.mf.map.api.MapView;
 
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     static final String TAG = "MainActivity";
-    private MapView mMapView;
+    private MapViewManager mMapViewManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        CommonContextHolder.setContext(this);
 
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "Permission Granted");
@@ -45,66 +42,33 @@ public class MainActivity extends AppCompatActivity {
                     Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
 
-        CommonContextHolder.setContext(this);
-        mMapView = new MapView(this);
-        ViewGroup mapViewContainer = findViewById(R.id.mapView);
-        mapViewContainer.addView(mMapView);
+        mMapViewManager = new MapViewManager((ViewGroup)findViewById(R.id.mapView));
+
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        final LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     Log.d(TAG, "Permission granted");
-                    LocationInfoProvider locationInfoProvider = new LocationInfoProvider(getApplicationContext());
-                    mMapView.setMapCenterPointAndZoomLevel(MapPoint.mapPointWithGeoCoord(locationInfoProvider.getLatitude(), locationInfoProvider.getLongitude()), 1, true);
-                    MapPOIItem marker = new MapPOIItem();
-                    marker.setItemName("Default Marker");
-                    marker.setTag(0);
-                    marker.setMapPoint(MapPoint.mapPointWithGeoCoord(locationInfoProvider.getLatitude(), locationInfoProvider.getLongitude()));
-                    marker.setMarkerType(MapPOIItem.MarkerType.BluePin);
-                    marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
-
-                    mMapView.addPOIItem(marker);
+                    mMapViewManager.addCurrentLocationMarker();
                 } else {
                     Log.d(TAG, "Permission Denied");
                 }
             }
         });
-        mMapView.setMapViewEventListener(new MapViewEventListener() {
-            @Override
-            public void onLoadMapView() {
-                Log.d(TAG, "onLoadMapView");
 
-            }
-        });
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
 
-        mMapView.setCurrentLocationEventListener(new MapView.CurrentLocationEventListener() {
-            @Override
-            public void onCurrentLocationUpdate(MapView mapView, MapPoint mapPoint, float v) {
-                Log.d(TAG, "onCurrentLocationupdated");
-            }
-
-            @Override
-            public void onCurrentLocationDeviceHeadingUpdate(MapView mapView, float v) {
-                Log.d(TAG, "DeviceHeading UPdate");
-            }
-
-            @Override
-            public void onCurrentLocationUpdateFailed(MapView mapView) {
-                Log.d(TAG, "onCurrentLocationupdateFailed");
-            }
-
-            @Override
-            public void onCurrentLocationUpdateCancelled(MapView mapView) {
-                Log.d(TAG, "oncurrentLocationupdateCancelled");
-            }
-        });
-
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         //Getting Hash Key (Now only debug version)
         /*
@@ -122,7 +86,15 @@ public class MainActivity extends AppCompatActivity {
         }
         */
     }
-
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -150,5 +122,29 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 1) {
             CommonContextHolder.setContext(this);
         }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
