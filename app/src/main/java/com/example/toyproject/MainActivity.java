@@ -30,12 +30,13 @@ import net.daum.mf.map.api.MapView;
 
 public class MainActivity extends AppCompatActivity {
     static final String TAG = "MainActivity";
-    private MapView mMapView;
+    private MapViewManager mMapViewManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        CommonContextHolder.setContext(this);
 
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "Permission Granted");
@@ -45,66 +46,24 @@ public class MainActivity extends AppCompatActivity {
                     Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
 
-        CommonContextHolder.setContext(this);
-        mMapView = new MapView(this);
-        ViewGroup mapViewContainer = findViewById(R.id.mapView);
-        mapViewContainer.addView(mMapView);
+        mMapViewManager = new MapViewManager((ViewGroup)findViewById(R.id.mapView));
+
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        final LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     Log.d(TAG, "Permission granted");
-                    LocationInfoProvider locationInfoProvider = new LocationInfoProvider(getApplicationContext());
-                    mMapView.setMapCenterPointAndZoomLevel(MapPoint.mapPointWithGeoCoord(locationInfoProvider.getLatitude(), locationInfoProvider.getLongitude()), 1, true);
-                    MapPOIItem marker = new MapPOIItem();
-                    marker.setItemName("Default Marker");
-                    marker.setTag(0);
-                    marker.setMapPoint(MapPoint.mapPointWithGeoCoord(locationInfoProvider.getLatitude(), locationInfoProvider.getLongitude()));
-                    marker.setMarkerType(MapPOIItem.MarkerType.BluePin);
-                    marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin);
-
-                    mMapView.addPOIItem(marker);
+                    mMapViewManager.addCurrentLocationMarker();
                 } else {
                     Log.d(TAG, "Permission Denied");
                 }
             }
         });
-        mMapView.setMapViewEventListener(new MapViewEventListener() {
-            @Override
-            public void onLoadMapView() {
-                Log.d(TAG, "onLoadMapView");
-
-            }
-        });
-
-        mMapView.setCurrentLocationEventListener(new MapView.CurrentLocationEventListener() {
-            @Override
-            public void onCurrentLocationUpdate(MapView mapView, MapPoint mapPoint, float v) {
-                Log.d(TAG, "onCurrentLocationupdated");
-            }
-
-            @Override
-            public void onCurrentLocationDeviceHeadingUpdate(MapView mapView, float v) {
-                Log.d(TAG, "DeviceHeading UPdate");
-            }
-
-            @Override
-            public void onCurrentLocationUpdateFailed(MapView mapView) {
-                Log.d(TAG, "onCurrentLocationupdateFailed");
-            }
-
-            @Override
-            public void onCurrentLocationUpdateCancelled(MapView mapView) {
-                Log.d(TAG, "oncurrentLocationupdateCancelled");
-            }
-        });
-
 
         //Getting Hash Key (Now only debug version)
         /*
