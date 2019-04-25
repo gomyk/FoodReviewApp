@@ -43,7 +43,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         mMapViewManager = new MapViewManager((ViewGroup)findViewById(R.id.mapView));
-
+        if(isPermissionGranted()){
+            mMapViewManager.addCurrentLocationMarker();
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -52,11 +54,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "Permission granted");
+                if(isPermissionGranted()){
                     mMapViewManager.addCurrentLocationMarker();
-                } else {
-                    Log.d(TAG, "Permission Denied");
                 }
             }
         });
@@ -146,5 +145,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    private boolean isPermissionGranted(){
+        return ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 }
