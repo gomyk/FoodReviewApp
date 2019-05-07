@@ -9,8 +9,14 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class LocationInfoProvider extends Service implements LocationListener {
 
@@ -37,12 +43,11 @@ public class LocationInfoProvider extends Service implements LocationListener {
     @TargetApi(23)
     public Location getLocation() {
         if (ContextCompat.checkSelfPermission(
-                mContext, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                CommonContextHolder.getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(
-                        mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                        CommonContextHolder.getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
-
             return null;
         }
 
@@ -53,7 +58,6 @@ public class LocationInfoProvider extends Service implements LocationListener {
                     .isProviderEnabled(LocationManager.GPS_PROVIDER);
             isNetworkEnabled = locationManager
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
             if (!isGPSEnabled && !isNetworkEnabled) {
             } else {
                 this.isGetLocation = true;
@@ -104,7 +108,9 @@ public class LocationInfoProvider extends Service implements LocationListener {
     }
 
     public double getLatitude() {
+
         if (location != null) {
+            Log.d("location : ", "!! null");
             lat = location.getLatitude();
         }
         return lat;
@@ -128,7 +134,7 @@ public class LocationInfoProvider extends Service implements LocationListener {
 
     public void onLocationChanged(Location location) {
         // TODO Auto-generated method stub
-
+        this.location = location;
     }
 
     public void onStatusChanged(String provider, int status, Bundle extras) {

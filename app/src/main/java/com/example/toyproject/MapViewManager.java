@@ -1,6 +1,8 @@
 package com.example.toyproject;
 
+import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.toyproject.utils.CommonContextHolder;
@@ -35,23 +37,35 @@ public class MapViewManager implements MapView.POIItemEventListener {
         mMapView.addPOIItem(marker);
     }
 
+    public void updateCurrentLocation(){
+        locationInfoProvider.getLocation();
+    }
+    public void showSnackBarAsLog(View v, String text) {
+        Snackbar.make(v, text, Snackbar.LENGTH_LONG).show();
+    }
+
     @Override
     public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {
         Log.d(TAG, "onPOIItemSelected");
+        showSnackBarAsLog(mapView, "onPOIItemSelected");
+
     }
 
     @Override
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem) {
         Log.d(TAG, "onCalloutBalloonOfPOIItemTouched");
+        showSnackBarAsLog(mapView, "onCalloutBalloonOfPOIItemTouched");
     }
 
     @Override
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem, MapPOIItem.CalloutBalloonButtonType calloutBalloonButtonType) {
         Log.d(TAG, "onCalloutBalloonOfPOIItemTouched_more_parameters");
+        showSnackBarAsLog(mapView, "onCalloutBalloonOfPOIItemTouched_more_parameters");
     }
 
     @Override
     public void onDraggablePOIItemMoved(MapView mapView, MapPOIItem mapPOIItem, MapPoint mapPoint) {
         Log.d(TAG, "onDraggablePOIItemMoved");
+        showSnackBarAsLog(mapView, "onDraggablePOIItemMoved");
     }
 }
