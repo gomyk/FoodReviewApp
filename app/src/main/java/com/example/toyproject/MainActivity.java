@@ -13,6 +13,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
 import android.util.Log;
@@ -21,12 +22,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
+import com.example.toyproject.RecyclerView.CustomRecyclerView;
 import com.example.toyproject.utils.CommonContextHolder;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     static final String TAG = "MainActivity";
     private MapViewManager mMapViewManager;
+    private CustomRecyclerView mCustomRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         mMapViewManager = new MapViewManager((ViewGroup) findViewById(R.id.mapView));
+        mCustomRecyclerView = new CustomRecyclerView((RecyclerView) findViewById(R.id.recyclerView));
+        mCustomRecyclerView.Initialize();
+
         if (isPermissionGranted()) {
             mMapViewManager.addCurrentLocationMarker();
         }
