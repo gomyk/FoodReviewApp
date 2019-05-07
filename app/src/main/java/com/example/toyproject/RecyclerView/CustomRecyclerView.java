@@ -3,11 +3,12 @@ package com.example.toyproject.RecyclerView;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
+import android.util.Log;
 
 import com.example.toyproject.utils.CommonContextHolder;
 
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class CustomRecyclerView {
@@ -25,13 +26,16 @@ public class CustomRecyclerView {
     }
 
     public void Initialize() {
-        Thread thread = new Thread(() -> {
-            initDataset();
-            mAdapter = new CustomRecyclerViewAdapter(mDataset);
-            mRecyclerView.setAdapter(mAdapter);
-            mRecyclerView.setLayoutManager(mLayoutManager);
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                initDataset();
+                mAdapter = new CustomRecyclerViewAdapter(mDataset);
+                mRecyclerView.setAdapter(mAdapter);
+                mRecyclerView.setLayoutManager(mLayoutManager);
+            }
         });
-        thread.run();
     }
 
 

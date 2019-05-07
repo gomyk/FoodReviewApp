@@ -2,7 +2,10 @@ package com.example.toyproject;
 
 
 import android.Manifest;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -24,6 +28,9 @@ import android.view.ViewGroup;
 
 import com.example.toyproject.RecyclerView.CustomRecyclerView;
 import com.example.toyproject.utils.CommonContextHolder;
+
+
+import java.security.MessageDigest;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -61,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
                 if (isPermissionGranted()) {
+                    mMapViewManager.updateCurrentLocation();
                     mMapViewManager.addCurrentLocationMarker();
                 }
             }
@@ -76,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         //Getting Hash Key (Now only debug version)
-        /*
+
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
@@ -84,12 +92,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
                 String keyHash = new String(Base64.encode(md.digest(), 0));
-                Log.d("@@TEST", keyHash);
+                Log.i("@@TEST", keyHash);
             }
         } catch (Exception e) {
             Log.e("name not found", e.toString());
         }
-        */
+
     }
 
     @Override

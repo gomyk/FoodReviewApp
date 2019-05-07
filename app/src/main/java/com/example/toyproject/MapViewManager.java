@@ -37,6 +37,9 @@ public class MapViewManager implements MapView.POIItemEventListener {
         mMapView.addPOIItem(marker);
     }
 
+    public void updateCurrentLocation(){
+        locationInfoProvider.getLocation();
+    }
     public void showSnackBarAsLog(View v, String text) {
         Snackbar.make(v, text, Snackbar.LENGTH_LONG).show();
     }
