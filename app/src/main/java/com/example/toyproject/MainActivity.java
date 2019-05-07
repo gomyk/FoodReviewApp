@@ -24,7 +24,7 @@ import android.view.ViewGroup;
 import com.example.toyproject.utils.CommonContextHolder;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     static final String TAG = "MainActivity";
     private MapViewManager mMapViewManager;
 
@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
 
-        mMapViewManager = new MapViewManager((ViewGroup)findViewById(R.id.mapView));
-        if(isPermissionGranted()){
+        mMapViewManager = new MapViewManager((ViewGroup) findViewById(R.id.mapView));
+        if (isPermissionGranted()) {
             mMapViewManager.addCurrentLocationMarker();
         }
 
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isPermissionGranted()){
+                if (isPermissionGranted()) {
                     mMapViewManager.addCurrentLocationMarker();
                 }
             }
@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         */
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -94,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             super.onBackPressed();
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -146,7 +148,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    private boolean isPermissionGranted(){
+
+    private boolean isPermissionGranted() {
         return ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 }
