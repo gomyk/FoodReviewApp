@@ -16,23 +16,15 @@ public class LocationInfoProvider extends Service implements LocationListener {
 
     private final Context mContext;
 
-    // 현재 GPS 사용유무
     boolean isGPSEnabled = false;
-
-    // 네트워크 사용유무
     boolean isNetworkEnabled = false;
-
-    // GPS 상태값
     boolean isGetLocation = false;
 
     Location location;
-    double lat; // 위도
-    double lon; // 경도
+    double lat;
+    double lon;
 
-    // 최소 GPS 정보 업데이트 거리 10미터
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 1;
-
-    // 최소 GPS 정보 업데이트 시간 밀리세컨이므로 1초
     private static final long MIN_TIME_BW_UPDATES = 1000 * 1 * 1;
 
     protected LocationManager locationManager;
@@ -45,8 +37,8 @@ public class LocationInfoProvider extends Service implements LocationListener {
     @TargetApi(23)
     public Location getLocation() {
         if (ContextCompat.checkSelfPermission(
-                        mContext, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED &&
+                mContext, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(
                         mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
@@ -63,10 +55,8 @@ public class LocationInfoProvider extends Service implements LocationListener {
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
             if (!isGPSEnabled && !isNetworkEnabled) {
-                // GPS 와 네트워크사용이 가능하지 않을때 소스 구현
             } else {
                 this.isGetLocation = true;
-                // 네트워크 정보로 부터 위치값 가져오기
                 if (isNetworkEnabled) {
                     locationManager.requestLocationUpdates(
                             LocationManager.NETWORK_PROVIDER,
@@ -77,7 +67,6 @@ public class LocationInfoProvider extends Service implements LocationListener {
                         location = locationManager
                                 .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                         if (location != null) {
-                            // 위도 경도 저장
                             lat = location.getLatitude();
                             lon = location.getLongitude();
                         }
