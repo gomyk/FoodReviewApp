@@ -145,8 +145,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         switch (id) {
-            case R.id.nav_login: {
-                item.setTitle("logout");
+            case R.id.action_settings: {
+                return true;
             }
         }
         return super.onOptionsItemSelected(item);
