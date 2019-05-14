@@ -19,4 +19,7 @@
     <!-- list color -->
     <color name="list_background">#FFFFFF</color>
     <color name="list_divider">#E5E5E5</color>
+
+    <!-- spinner color -->
+    <color name="spinner_menu_text">#2A2A2A</color>
 </resources>

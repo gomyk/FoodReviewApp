@@ -15,4 +15,18 @@
     <!-- list dimens -->
     <dimen name="list_divider_height">1dp</dimen>
 
+    <!-- spinner dimens -->
+    <dimen name="spinner_horizontal_padding">16dp</dimen>
+
+    <dimen name="spinner_menu_image_width">48dp</dimen>
+    <dimen name="spinner_menu_image_height">48dp</dimen>
+
+    <dimen name="spinner_arrow_image_width">48dp</dimen>
+    <dimen name="spinner_arrow_image_height">48dp</dimen>
+
+    <dimen name="spinner_text_view_horizontal_margin">8dp</dimen>
+    <dimen name="spinner_text_size">20sp</dimen>
+
+    <dimen name="spinner_item_height">72dp</dimen>
+
 </resources>
