@@ -5,7 +5,13 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
+    <!-- common dimens -->
+
     <!-- marker dimens -->
     <dimen name="marker_textSize">14sp</dimen>
-    
+
+    <!-- recycler view dimens -->
+    <dimen name="recyclerview_horizontal_margin">4dp</dimen>
+    <dimen name="recyclerview_vertical_margin">8dp</dimen>
+
 </resources>
