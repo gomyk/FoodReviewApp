@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -29,11 +32,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.toyproject.AccountManager.LoginActivity;
+import com.example.toyproject.AccountManager.UserAccountDataHolder;
 import com.example.toyproject.RecyclerView.CustomRecyclerView;
 import com.example.toyproject.utils.CommonContextHolder;
 import com.example.toyproject.utils.CommonContracts;
 
 
+import java.io.InputStream;
 import java.security.MessageDigest;
 
 
@@ -105,18 +111,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         //Getting Hash Key (Now only debug version)
 
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md;
-                md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                String keyHash = new String(Base64.encode(md.digest(), 0));
-                Log.i("@@TEST", keyHash);
-            }
-        } catch (Exception e) {
-            Log.e("name not found", e.toString());
-        }
+//        try {
+//            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+//            for (Signature signature : info.signatures) {
+//                MessageDigest md;
+//                md = MessageDigest.getInstance("SHA");
+//                md.update(signature.toByteArray());
+//                String keyHash = new String(Base64.encode(md.digest(), 0));
+//                Log.i("@@TEST", keyHash);
+//            }
+//        } catch (Exception e) {
+//            Log.e("name not found", e.toString());
+//        }
 
     }
 
@@ -178,20 +184,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case CommonContracts.LOGIN_ACTIVITY_REQUSET: {
-                if (resultCode == Activity.RESULT_OK) {
+                if (resultCode == CommonContracts.LOGIN_SUCCESS) {
                     mIsLoggedIn = true;
-                    Log.d("@@TEST", "found");
                     Menu menu = findViewById(R.id.nav_menu);
                     onPrepareOptionsMenu(menu);
+                    new DownloadImageTask((ImageView) findViewById(R.id.user_icon))
+                            .execute(UserAccountDataHolder.sThumbnailPath);
                     ImageView user_icon = findViewById(R.id.user_icon);
                     TextView user_email = findViewById(R.id.user_email);
                     user_icon.setImageResource(R.drawable.kimdonghyun_face);
-                    user_email.setText(data.getExtras().getCharSequence("id"));
+                    user_email.setText(UserAccountDataHolder.sNickName);
                     mLoginText.setText("Log Out");
-                } else {
-                    //Todo : when it canceled
                 }
             }
+        }
+    }
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
         }
     }
 }
