@@ -27,14 +27,14 @@
 
             <TextView
                 android:id="@+id/title"
-                android:layout_width="99dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="Custom Marker"
-                android:textColor="#ff000000"
-                android:textSize="14sp"
+                android:textColor="@color/marker_text_title"
+                android:textSize="@dimen/marker_textSize"
                 android:textStyle="bold" />
 
             <TextView
@@ -44,8 +44,8 @@
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="custom marker desc."
-                android:textColor="#ff7f7f7f"
-                android:textSize="14sp" />
+                android:textColor="@color/marker_text_content"
+                android:textSize="@dimen/marker_textSize" />
         </LinearLayout>
     </LinearLayout>
 
