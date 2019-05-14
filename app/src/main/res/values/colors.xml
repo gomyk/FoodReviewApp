@@ -15,4 +15,8 @@
     <!-- marker color -->
     <color name="marker_text_title">#ff000000</color>
     <color name="marker_text_content">#ff7f7f7f</color>
+
+    <!-- list color -->
+    <color name="list_background">#FFFFFF</color>
+    <color name="list_divider">#E5E5E5</color>
 </resources>
