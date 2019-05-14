@@ -29,4 +29,7 @@
 
     <dimen name="spinner_item_height">72dp</dimen>
 
+    <!-- map view dimens -->
+    <dimen name="mapview_vertical_margin">8dp</dimen>
+
 </resources>
