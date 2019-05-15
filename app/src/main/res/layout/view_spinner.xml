@@ -3,21 +3,20 @@
               android:orientation="horizontal"
               android:background="@drawable/selector_item_bg"
               android:gravity="center_vertical"
-              android:paddingLeft="16dp"
-              android:paddingRight="16dp"
+              android:paddingLeft="@dimen/spinner_horizontal_padding"
+              android:paddingRight="@dimen/spinner_horizontal_padding"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
     <ImageView
         android:id="@+id/menu_icon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"/>
+        android:layout_width="@dimen/spinner_menu_image_width"
+        android:layout_height="@dimen/spinner_menu_image_height"/>
 
     <TextView
         android:id="@+id/menu_title"
-        android:textColor="@color/color3"
-        android:textSize="20sp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
+        android:textColor="@color/spinner_menu_text"
+        android:textSize="@dimen/spinner_text_size"
+        android:layout_marginLeft="@dimen/spinner_text_view_horizontal_margin"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"/>
@@ -25,6 +24,6 @@
     <ImageView
         android:background="@drawable/icon_arrow"
         android:layout_gravity="end|center_vertical"
-        android:layout_width="48dp"
-        android:layout_height="48dp"/>
+        android:layout_width="@dimen/spinner_arrow_image_width"
+        android:layout_height="@dimen/spinner_arrow_image_height"/>
 </LinearLayout>
