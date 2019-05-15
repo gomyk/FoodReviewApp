@@ -11,4 +11,15 @@
     <color name="color6">#FFFFFF</color>
     <color name="color7">#000000</color>
     <color name="color8">#4A4A4C</color>
+
+    <!-- marker color -->
+    <color name="marker_text_title">#ff000000</color>
+    <color name="marker_text_content">#ff7f7f7f</color>
+
+    <!-- list color -->
+    <color name="list_background">#FFFFFF</color>
+    <color name="list_divider">#E5E5E5</color>
+
+    <!-- spinner color -->
+    <color name="spinner_menu_text">#2A2A2A</color>
 </resources>
