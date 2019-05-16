@@ -17,7 +17,7 @@
     <dimen name="spinner_horizontal_padding">16dp</dimen>
 
     <dimen name="spinner_menu_image_width">48dp</dimen>
-    <dimen name="spinner_menu_image_height">48dp</dimen>
+    <dimen name="spinner_menu_image_heinav_logo_widthght">48dp</dimen>
 
     <dimen name="spinner_arrow_image_width">48dp</dimen>
     <dimen name="spinner_arrow_image_height">48dp</dimen>
