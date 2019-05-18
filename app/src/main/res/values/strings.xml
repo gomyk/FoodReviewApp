@@ -16,4 +16,13 @@
     <string name="female">Female</string>
     <string name="usermgmg_name">Write Your Name</string>
     <string name="usermgmg_age">Write Your Age</string>
+
+
+
+    <!-- button -->
+    <string name="button_ok">Ok</string>
+    <string name="button_cancel">Cancel</string>
+
+
+
 </resources>

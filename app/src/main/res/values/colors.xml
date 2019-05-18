@@ -3,9 +3,8 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="color1">#404040</color>
-    <color name="color2">#B2B2B2</color>
-    <color name="color3">#2A2A2A</color>
+    <color name="colorTextBlack">#2A2A2A</color>
+    <color name="colorTextGray">#B2B2B2</color>
     <color name="color4">#E5E5E5</color>
     <color name="color5">#F6F6F6</color>
     <color name="color6">#FFFFFF</color>
@@ -18,7 +17,9 @@
 
     <!-- list color -->
     <color name="list_background">#FFFFFF</color>
-    <color name="list_divider">#E5E5E5</color>
+
+    <!-- divider color -->
+    <color name="divider">#E5E5E5</color>
 
     <!-- spinner color -->
     <color name="spinner_menu_text">#2A2A2A</color>
