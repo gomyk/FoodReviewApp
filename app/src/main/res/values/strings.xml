@@ -23,6 +23,7 @@
     <string name="button_ok">Ok</string>
     <string name="button_cancel">Cancel</string>
 
-
+    <!-- navigation -->
+    <string name="nav_login">Log In</string>
 
 </resources>
