@@ -22,7 +22,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
     <style name="button" parent="@android:style/Widget.Button">
         <item name="android:gravity">center_vertical|center_horizontal</item>
-        <item name="android:textColor">@color/color6</item>
+        <item name="android:textColor">@color/colorWhite</item>
         <item name="android:textSize">16sp</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
@@ -39,8 +39,8 @@
         <item name="android:textSize">20sp</item>
         <item name="android:paddingLeft">15sp</item>
         <item name="android:inputType">text</item>
-        <item name="android:textColorHint">@color/color2</item>
-        <item name="android:textColor">@color/color3</item>
+        <item name="android:textColorHint">@color/colorTextGray</item>
+        <item name="android:textColor">@color/colorTextBlack</item>
         <item name="android:background">@drawable/selector_editbox_bg</item>
     </style>
 </resources>

@@ -11,15 +11,15 @@
     <color name="colorBlack">#000000</color>
 
     <!-- marker color -->
-    <color name="marker_text_title">"@color/colorTextBlack"</color>
-    <color name="marker_text_content">"@color/colorTextGray"</color>
+    <color name="marker_text_title">@color/colorTextBlack</color>
+    <color name="marker_text_content">@color/colorTextGray</color>
 
     <!-- list color -->
-    <color name="list_background">"@color/colorWhite"</color>
+    <color name="list_background">@color/colorWhite</color>
 
     <!-- divider color -->
-    <color name="divider">"@color/colorGray"</color>
+    <color name="divider">@color/colorGray</color>
 
     <!-- spinner color -->
-    <color name="spinner_menu_text">"@color/colorTextBlack"</color>
+    <color name="spinner_menu_text">@color/colorTextBlack</color>
 </resources>
