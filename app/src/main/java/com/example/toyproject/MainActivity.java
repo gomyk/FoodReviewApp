@@ -4,6 +4,7 @@ package com.example.toyproject;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -23,6 +24,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -49,13 +51,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private CustomRecyclerView mCustomRecyclerView;
     private Boolean mIsLoggedIn = false;
     private TextView mLoginText;
-
+    private SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         CommonContextHolder.setContext(this);
+        sharedPreferences = this.getSharedPreferences("sfile",MODE_PRIVATE);
+        CommonContextHolder.setLoginMethod(sharedPreferences.getString("LoginMethod","NotLogin"));
 
+        if (TextUtils.equals(CommonContextHolder.getLoginMethod(), "kakaotalk")) {
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivityForResult(intent, CommonContracts.LOGIN_ACTIVITY_REQUEST);
+        }
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "Permission Granted");
         } else {
@@ -104,9 +112,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 TextView user_email = findViewById(R.id.user_email);
                 user_icon.setImageResource(R.drawable.googleg_standard_color_18);
                 user_email.setText(R.string.nav_header_subtitle);
+                setLoginCache("NotLogin");
             } else {
                 Intent intent = new Intent(this, LoginActivity.class);
-                startActivityForResult(intent, CommonContracts.LOGIN_ACTIVITY_REQUSET);
+                startActivityForResult(intent, CommonContracts.LOGIN_ACTIVITY_REQUEST);
             }
         });
         //Getting Hash Key (Now only debug version)
@@ -183,21 +192,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case CommonContracts.LOGIN_ACTIVITY_REQUSET: {
+            case CommonContracts.LOGIN_ACTIVITY_REQUEST: {
                 if (resultCode == CommonContracts.LOGIN_SUCCESS) {
                     mIsLoggedIn = true;
-                    Menu menu = findViewById(R.id.nav_menu);
-                    onPrepareOptionsMenu(menu);
-                    new DownloadImageTask((ImageView) findViewById(R.id.user_icon))
-                            .execute(UserAccountDataHolder.sThumbnailPath);
-                    ImageView user_icon = findViewById(R.id.user_icon);
-                    TextView user_email = findViewById(R.id.user_email);
-                    user_icon.setImageResource(R.drawable.kimdonghyun_face);
-                    user_email.setText(UserAccountDataHolder.sNickName);
-                    mLoginText.setText("Log Out");
+                    setLoginCache("kakaotalk");
+                    setUserInfo();
                 }
             }
         }
+    }
+
+    private void setLoginCache(String method){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("LoginMethod", method);
+        editor.commit();
+        CommonContextHolder.setLoginMethod(method);
+    }
+
+    private void setUserInfo(){
+        Menu menu = findViewById(R.id.nav_menu);
+        onPrepareOptionsMenu(menu);
+        new DownloadImageTask((ImageView) findViewById(R.id.user_icon))
+                .execute(UserAccountDataHolder.sThumbnailPath);
+        ImageView user_icon = findViewById(R.id.user_icon);
+        TextView user_email = findViewById(R.id.user_email);
+        user_icon.setImageResource(R.drawable.kimdonghyun_face);
+        user_email.setText(UserAccountDataHolder.sNickName);
+        mLoginText.setText("Log Out");
     }
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
