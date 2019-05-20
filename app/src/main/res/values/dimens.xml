@@ -10,8 +10,9 @@
     <dimen name="recyclerview_horizontal_margin">4dp</dimen>
     <dimen name="recyclerview_vertical_margin">8dp</dimen>
 
-    <!-- list dimens -->
-    <dimen name="list_divider_height">1dp</dimen>
+    <!-- divider dimens -->
+    <dimen name="divider_height">1dp</dimen>
+    <dimen name="divider_horizontal_margin">25dp</dimen>
 
     <!-- spinner dimens -->
     <dimen name="spinner_horizontal_padding">16dp</dimen>
@@ -39,4 +40,19 @@
 
     <dimen name="nav_header_text_margin">8dp</dimen>
     <dimen name="nav_header_text_size">20dp</dimen>
+
+    <!-- pop up dimens -->
+    <dimen name="popup_width">300dp</dimen>
+
+    <dimen name="popup_title_text_size">18sp</dimen>
+    <dimen name="popup_content_text_size">16sp</dimen>
+
+    <dimen name="popup_content_max_height">400dp</dimen>
+
+    <dimen name="popup_content_horizontal_padding">25dp</dimen>
+    <dimen name="popup_content_top_padding">30dp</dimen>
+    <dimen name="popup_content_bottom_padding">15dp</dimen>
+
+    <dimen name="popup_button_height">57dp</dimen>
+
 </resources>

@@ -32,7 +32,7 @@
         android:layout_marginTop="@dimen/nav_header_text_margin"
         android:layout_marginEnd="@dimen/nav_header_text_margin"
         android:layout_marginBottom="@dimen/nav_header_text_margin"
-        android:text="Log In"
+        android:text="@string/nav_login"
         android:textSize="@dimen/nav_header_text_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
