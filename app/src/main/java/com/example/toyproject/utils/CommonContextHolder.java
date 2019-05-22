@@ -6,6 +6,7 @@ import android.text.TextUtils;
 public class CommonContextHolder {
     private static Context sContext;
     private static String sLoginMethod;
+    private static boolean sRecyclerViewVisible;
 
     public CommonContextHolder() {
 
@@ -18,7 +19,9 @@ public class CommonContextHolder {
     public static String getLoginMethod() {
         return sLoginMethod;
     }
-
+    public static boolean getRecyclerViewVisible(){
+        return sRecyclerViewVisible;
+    }
     public static void setContext(Context context) {
         if (context != null) {
             CommonContextHolder.sContext = context;
@@ -29,5 +32,9 @@ public class CommonContextHolder {
         if (!TextUtils.isEmpty(loginMethod)) {
             CommonContextHolder.sLoginMethod = loginMethod;
         }
+    }
+
+    public static void setRecyclerViewVisible(boolean visible){
+        sRecyclerViewVisible = visible;
     }
 }

@@ -38,6 +38,13 @@ public class CustomRecyclerView {
         });
     }
 
+    public void setVisibility(boolean visibility){
+        if(visibility){
+            mRecyclerView.setVisibility(RecyclerView.VISIBLE);
+        } else{
+            mRecyclerView.setVisibility(RecyclerView.INVISIBLE);
+        }
+    }
 
     private void initDataset() {
         mDataset = new String[DATASET_COUNT];
