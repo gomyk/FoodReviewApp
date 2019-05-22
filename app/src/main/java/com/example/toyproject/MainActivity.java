@@ -100,10 +100,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 ChangeBounds transition = new ChangeBounds();
                 transition.setInterpolator(new AccelerateInterpolator());
-                transition.setDuration(1000);
-                TransitionManager.beginDelayedTransition(mContentMain,transition);
+                transition.setDuration(500);
+                TransitionManager.beginDelayedTransition(mContentMain, transition);
                 constraintSet.applyTo(mContentMain);
                 CommonContextHolder.setRecyclerViewVisible(!recyclerViewVisible);
+            }
+
+            @Override
+            public void onCalloutBallounTouched() {
+                Intent intent = new Intent(getApplicationContext(), WriteReviewActivity.class);
+                startActivityForResult(intent, CommonContracts.REVIEW_WRITE_ACTIVITY);
             }
         });
         if (isPermissionGranted()) {

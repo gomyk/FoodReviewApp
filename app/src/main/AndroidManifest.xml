@@ -14,8 +14,12 @@
         android:roundIcon="@drawable/kimdonghyun_face"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AccountManager.SignUpActivity"
-            android:theme="@android:style/Theme.Translucent"></activity>
+        <activity android:name=".WriteReviewActivity"
+            android:theme="@style/AppTheme.Dialog"
+            android:windowSoftInputMode="adjustPan"></activity>
+        <activity
+            android:name=".AccountManager.SignUpActivity"
+            android:theme="@android:style/Theme.Translucent" />
         <activity
             android:name=".AccountManager.LoginActivity"
             android:theme="@style/AppTheme.Dialog" />

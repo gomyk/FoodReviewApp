@@ -1,5 +1,6 @@
 package com.example.toyproject;
 
+import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
@@ -64,6 +65,7 @@ public class MapViewManager implements MapView.POIItemEventListener {
     public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem, MapPOIItem.CalloutBalloonButtonType calloutBalloonButtonType) {
         Log.d(TAG, "onCalloutBalloonOfPOIItemTouched_more_parameters");
         showSnackBarAsLog(mapView, "onCalloutBalloonOfPOIItemTouched_more_parameters");
+        mListener.onCalloutBallounTouched();
     }
 
     @Override
@@ -74,5 +76,6 @@ public class MapViewManager implements MapView.POIItemEventListener {
 
     public interface MapViewCustomListener {
         public void onPoiTouched(boolean recyclerViewVisible);
+        public void onCalloutBallounTouched();
     }
 }
