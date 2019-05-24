@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:id="@+id/popup"
-        android:layout_width="300dp"
+        android:layout_width="@dimen/popup_width"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="0dp"
@@ -26,17 +26,17 @@
                 android:layout_width="fill_parent"
                 android:layout_height="65dp"
                 android:gravity="center"
-                android:textSize="18sp"
-                android:textColor="@color/color1"
+                android:textSize="@dimen/popup_title_text_size"
+                android:textColor="@color/colorTextBlack"
                 />
 
             <ImageView
                 android:id="@+id/divide"
-                android:background="@color/color4"
+                android:background="@color/divider"
                 android:layout_width="fill_parent"
-                android:layout_marginLeft="25dp"
-                android:layout_marginRight="25dp"
-                android:layout_height="1dp"/>
+                android:layout_marginLeft="@dimen/divider_horizontal_margin"
+                android:layout_marginRight="@dimen/divider_horizontal_margin"
+                android:layout_height="@dimen/divider_height"/>
         </LinearLayout>
 
         <LinearLayout
@@ -49,14 +49,14 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="left"
-                android:maxHeight="400dp"
-                android:paddingLeft="25dp"
-                android:paddingRight="25dp"
-                android:paddingTop="15dp"
-                android:paddingBottom="30dp"
+                android:maxHeight="@dimen/popup_content_max_height"
+                android:paddingLeft="@dimen/popup_content_horizontal_padding"
+                android:paddingRight="@dimen/popup_content_horizontal_padding"
+                android:paddingTop="@dimen/popup_content_top_padding"
+                android:paddingBottom="@dimen/popup_content_bottom_padding"
                 android:scrollbars = "vertical"
-                android:textColor="@color/color1"
-                android:textSize="16sp"
+                android:textColor="@color/colorTextBlack"
+                android:textSize="@dimen/popup_content_text_size"
                 />
 
             <FrameLayout
@@ -64,7 +64,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:maxHeight="400dp">
+                android:maxHeight="@dimen/popup_content_max_height">
             </FrameLayout>
         </LinearLayout>
 
@@ -79,9 +79,9 @@
                 android:layout_weight="1"
                 style="@style/button"
                 android:layout_width="match_parent"
-                android:layout_height="57dp"
+                android:layout_height="@dimen/popup_button_height"
                 android:background="@drawable/popup_btn_a"
-                android:text="Cancel" />
+                android:text="@string/button_cancel" />
 
             <Button
                 android:id="@+id/bt_right"
@@ -89,8 +89,8 @@
                 style="@style/button"
                 android:background="@drawable/popup_btn_b"
                 android:layout_width="match_parent"
-                android:layout_height="57dp"
-                android:text="Ok" />
+                android:layout_height="@dimen/popup_button_height"
+                android:text="@string/button_ok" />
         </LinearLayout>
     </LinearLayout>
 

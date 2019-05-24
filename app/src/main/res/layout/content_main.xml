@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerViewLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_menu_compass" />
     />
@@ -25,21 +25,31 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="@dimen/mapview_vertical_margin"
-        app:layout_constraintBottom_toTopOf="@id/recyclerView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:background="@drawable/border"
+    <RelativeLayout
+        android:id="@+id/recyclerViewLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginLeft="@dimen/recyclerview_horizontal_margin"
-        android:layout_marginRight="@dimen/recyclerview_horizontal_margin"
-        android:layout_marginBottom="@dimen/recyclerview_vertical_margin"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mapView"
-        tools:layout_editor_absoluteX="0dp" />
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginBottom="@dimen/recyclerview_vertical_margin"
+            android:background="@drawable/border" />
+    </RelativeLayout>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/recyler_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="300dp" />
+
+
 </android.support.constraint.ConstraintLayout>

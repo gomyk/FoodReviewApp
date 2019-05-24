@@ -15,8 +15,8 @@
 
     <ImageView
         android:id="@+id/user_icon"
-        android:layout_width="@dimen/nav_logo_width"
-        android:layout_height="@dimen/nav_logo_height"
+        android:layout_width="@dimen/nav_header_logo_width"
+        android:layout_height="@dimen/nav_header_logo_height"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:contentDescription="@string/nav_header_desc"
@@ -32,7 +32,7 @@
         android:layout_marginTop="@dimen/nav_header_text_margin"
         android:layout_marginEnd="@dimen/nav_header_text_margin"
         android:layout_marginBottom="@dimen/nav_header_text_margin"
-        android:text="Log In"
+        android:text="@string/nav_login"
         android:textSize="@dimen/nav_header_text_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

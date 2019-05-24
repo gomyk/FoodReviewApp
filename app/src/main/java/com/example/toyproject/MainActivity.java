@@ -4,6 +4,7 @@ package com.example.toyproject;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -12,6 +13,8 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -23,12 +26,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
+import android.text.TextUtils;
+import android.transition.ChangeBounds;
+import android.transition.TransitionManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AnticipateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -47,15 +56,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     static final String TAG = "MainActivity";
     private MapViewManager mMapViewManager;
     private CustomRecyclerView mCustomRecyclerView;
+    private ViewGroup mRecyclerViewGroup;
+    private ConstraintLayout mContentMain;
     private Boolean mIsLoggedIn = false;
     private TextView mLoginText;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         CommonContextHolder.setContext(this);
+        CommonContextHolder.setRecyclerViewVisible(false);
+        sharedPreferences = this.getSharedPreferences("sfile", MODE_PRIVATE);
+        CommonContextHolder.setLoginMethod(sharedPreferences.getString("LoginMethod", "NotLogin"));
 
+        if (TextUtils.equals(CommonContextHolder.getLoginMethod(), "kakaotalk")) {
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivityForResult(intent, CommonContracts.LOGIN_ACTIVITY_REQUEST);
+        }
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, "Permission Granted");
         } else {
@@ -63,11 +82,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             ActivityCompat.requestPermissions(this, new String[]{
                     Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
-
-        mMapViewManager = new MapViewManager((ViewGroup) findViewById(R.id.mapView));
+        mContentMain = findViewById(R.id.content_main);
+        mRecyclerViewGroup = findViewById(R.id.recyclerViewLayout);
         mCustomRecyclerView = new CustomRecyclerView((RecyclerView) findViewById(R.id.recyclerView));
         mCustomRecyclerView.Initialize();
+        mMapViewManager = new MapViewManager((ViewGroup) findViewById(R.id.mapView));
+        mMapViewManager.setCustomMapViewListener(new MapViewManager.MapViewCustomListener() {
+            @Override
+            public void onPoiTouched(boolean recyclerViewVisible) {
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(mContentMain);
 
+                if (recyclerViewVisible) {
+                    constraintSet.connect(R.id.recyclerViewLayout, ConstraintSet.TOP, R.id.content_main, ConstraintSet.BOTTOM, 0);
+                } else {
+                    constraintSet.connect(R.id.recyclerViewLayout, ConstraintSet.TOP, R.id.recyler_guideline, ConstraintSet.BOTTOM, 0);
+                }
+                ChangeBounds transition = new ChangeBounds();
+                transition.setInterpolator(new AccelerateInterpolator());
+                transition.setDuration(1000);
+                TransitionManager.beginDelayedTransition(mContentMain,transition);
+                constraintSet.applyTo(mContentMain);
+                CommonContextHolder.setRecyclerViewVisible(!recyclerViewVisible);
+            }
+        });
         if (isPermissionGranted()) {
             mMapViewManager.addCurrentLocationMarker();
         }
@@ -104,9 +142,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 TextView user_email = findViewById(R.id.user_email);
                 user_icon.setImageResource(R.drawable.googleg_standard_color_18);
                 user_email.setText(R.string.nav_header_subtitle);
+                setLoginCache("NotLogin");
             } else {
                 Intent intent = new Intent(this, LoginActivity.class);
-                startActivityForResult(intent, CommonContracts.LOGIN_ACTIVITY_REQUSET);
+                startActivityForResult(intent, CommonContracts.LOGIN_ACTIVITY_REQUEST);
             }
         });
         //Getting Hash Key (Now only debug version)
@@ -183,21 +222,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case CommonContracts.LOGIN_ACTIVITY_REQUSET: {
+            case CommonContracts.LOGIN_ACTIVITY_REQUEST: {
                 if (resultCode == CommonContracts.LOGIN_SUCCESS) {
                     mIsLoggedIn = true;
-                    Menu menu = findViewById(R.id.nav_menu);
-                    onPrepareOptionsMenu(menu);
-                    new DownloadImageTask((ImageView) findViewById(R.id.user_icon))
-                            .execute(UserAccountDataHolder.sThumbnailPath);
-                    ImageView user_icon = findViewById(R.id.user_icon);
-                    TextView user_email = findViewById(R.id.user_email);
-                    user_icon.setImageResource(R.drawable.kimdonghyun_face);
-                    user_email.setText(UserAccountDataHolder.sNickName);
-                    mLoginText.setText("Log Out");
+                    setLoginCache("kakaotalk");
+                    setUserInfo();
                 }
             }
         }
+    }
+
+    private void setLoginCache(String method) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("LoginMethod", method);
+        editor.commit();
+        CommonContextHolder.setLoginMethod(method);
+    }
+
+    private void setUserInfo() {
+        Menu menu = findViewById(R.id.nav_menu);
+        onPrepareOptionsMenu(menu);
+        new DownloadImageTask((ImageView) findViewById(R.id.user_icon))
+                .execute(UserAccountDataHolder.sThumbnailPath);
+        ImageView user_icon = findViewById(R.id.user_icon);
+        TextView user_email = findViewById(R.id.user_email);
+        user_icon.setImageResource(R.drawable.kimdonghyun_face);
+        user_email.setText(UserAccountDataHolder.sNickName);
+        mLoginText.setText("Log Out");
     }
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {

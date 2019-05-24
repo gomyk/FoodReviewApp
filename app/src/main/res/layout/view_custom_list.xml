@@ -3,7 +3,7 @@
           android:listSelector="@drawable/selector_item_bg"
             android:clickable="true"
             android:background="@color/list_background"
-            android:dividerHeight="@dimen/list_divider_height"
-            android:divider="@color/list_divider"
+            android:dividerHeight="@dimen/divider_height"
+            android:divider="@color/divider"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"/>

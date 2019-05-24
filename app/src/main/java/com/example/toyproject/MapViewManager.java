@@ -16,7 +16,7 @@ public class MapViewManager implements MapView.POIItemEventListener {
     private static final String TAG = "MapViewManager";
     private MapView mMapView;
     final LocationInfoProvider locationInfoProvider;
-
+    private MapViewCustomListener mListener;
     public MapViewManager(ViewGroup container) {
         mMapView = new MapView(CommonContextHolder.getContext());
         mMapView.setPOIItemEventListener(this);
@@ -24,7 +24,9 @@ public class MapViewManager implements MapView.POIItemEventListener {
         container.addView(mMapView);
         locationInfoProvider = new LocationInfoProvider(CommonContextHolder.getContext());
     }
-
+    public void setCustomMapViewListener(MapViewCustomListener listener){
+        mListener = listener;
+    }
     public void addCurrentLocationMarker() {
         mMapView.removeAllPOIItems();
         mMapView.setMapCenterPointAndZoomLevel(MapPoint.mapPointWithGeoCoord(locationInfoProvider.getLatitude(), locationInfoProvider.getLongitude()), 1, true);
@@ -37,9 +39,10 @@ public class MapViewManager implements MapView.POIItemEventListener {
         mMapView.addPOIItem(marker);
     }
 
-    public void updateCurrentLocation(){
+    public void updateCurrentLocation() {
         locationInfoProvider.getLocation();
     }
+
     public void showSnackBarAsLog(View v, String text) {
         Snackbar.make(v, text, Snackbar.LENGTH_LONG).show();
     }
@@ -48,7 +51,7 @@ public class MapViewManager implements MapView.POIItemEventListener {
     public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {
         Log.d(TAG, "onPOIItemSelected");
         showSnackBarAsLog(mapView, "onPOIItemSelected");
-
+        mListener.onPoiTouched(CommonContextHolder.getRecyclerViewVisible());
     }
 
     @Override
@@ -67,5 +70,9 @@ public class MapViewManager implements MapView.POIItemEventListener {
     public void onDraggablePOIItemMoved(MapView mapView, MapPOIItem mapPOIItem, MapPoint mapPoint) {
         Log.d(TAG, "onDraggablePOIItemMoved");
         showSnackBarAsLog(mapView, "onDraggablePOIItemMoved");
+    }
+
+    public interface MapViewCustomListener {
+        public void onPoiTouched(boolean recyclerViewVisible);
     }
 }
