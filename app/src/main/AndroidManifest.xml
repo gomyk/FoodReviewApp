@@ -19,7 +19,7 @@
             android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".AccountManager.SignUpActivity"
-            android:theme="@android:style/Theme.Translucent" />
+            android:theme="@style/AppTheme.Translucent" />
         <activity
             android:name=".AccountManager.LoginActivity"
             android:theme="@style/AppTheme.Dialog" />
