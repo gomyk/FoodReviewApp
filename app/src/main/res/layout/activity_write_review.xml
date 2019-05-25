@@ -8,7 +8,7 @@
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/menu_review_name_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/TextInputEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
@@ -32,13 +32,16 @@
         android:isIndicator="false"
         android:numStars="5"
         android:stepSize="0.5"
+        android:secondaryProgressTint="@color/colorPrimary"
+        android:progressTint="@color/colorPrimaryDark"
+        android:progressBackgroundTint="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/menu_review_name_layout" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/menu_review_comment_layout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/TextInputEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
@@ -54,21 +57,29 @@
             android:maxLines="3"
             android:minEms="400" />
     </android.support.design.widget.TextInputLayout>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/review_viewPager"
+    <LinearLayout
+        android:id="@+id/review_viewPager_container"
         android:layout_width="0dp"
         android:layout_height="100dp"
+        android:background="@drawable/border"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:clipToPadding="false"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
         app:layout_constraintHorizontal_weight="7"
         app:layout_constraintEnd_toStartOf="@id/review_image_select_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/menu_review_comment_layout"
-        app:layout_constraintHorizontal_chainStyle= "spread_inside"/>
+        app:layout_constraintHorizontal_chainStyle= "spread_inside">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/review_viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="8dp"
+            android:clipToPadding="false" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/review_image_select_button"
@@ -77,11 +88,11 @@
         android:layout_height="100dp"
         android:layout_margin="8dp"
         android:layout_marginEnd="8dp"
-        android:backgroundTint="@color/colorPrimary"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:text="Select Image"
         app:layout_constraintHorizontal_weight="5"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/review_viewPager"
+        app:layout_constraintStart_toEndOf="@id/review_viewPager_container"
         app:layout_constraintTop_toBottomOf="@+id/menu_review_comment_layout"
         app:layout_constraintHorizontal_chainStyle= "spread_inside" />
 
@@ -91,7 +102,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:backgroundTint="@color/colorPrimary"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:text="SEND"
-        app:layout_constraintTop_toBottomOf="@+id/review_viewPager" />
+        app:layout_constraintTop_toBottomOf="@+id/review_viewPager_container" />
 </android.support.constraint.ConstraintLayout>

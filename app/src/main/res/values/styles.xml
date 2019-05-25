@@ -6,6 +6,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">@color/colorPrimaryDark</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/colorAccent</item>
+
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -15,11 +19,29 @@
 
     <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">@color/colorPrimaryDark</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
+        <item name="android:background">@color/colorPrimaryDark</item>
+        <item name="android:iconTint">@color/colorBlack</item>
+        <item name="android:titleTextStyle">@style/CustomTheme.ActionBar.Text</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+        <item name="colorControlNormal">@color/colorBlack</item>
+        <item name="actionOverflowButtonStyle">@style/overflowButtonStyle</item>
+    </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:titleTextStyle">@style/CustomTheme.ActionBar.Text</item>
+        <item name="android:listDivider">@color/colorBlack</item>
+    </style>
+
     <style name="button" parent="@android:style/Widget.Button">
         <item name="android:gravity">center_vertical|center_horizontal</item>
         <item name="android:textColor">@color/colorWhite</item>
@@ -42,5 +64,21 @@
         <item name="android:textColorHint">@color/colorTextGray</item>
         <item name="android:textColor">@color/colorTextBlack</item>
         <item name="android:background">@drawable/selector_editbox_bg</item>
+    </style>
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@color/colorBlack</item>
+        <item name="spinBars">true</item>
+    </style>
+    <style name="CustomTheme.ActionBar.Text" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
+    <style name="overflowButtonStyle" parent="@style/Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:tint">@color/colorBlack</item>
+    </style>
+
+    <style name="TextInputEditText" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="android:textCursorDrawable">@color/colorPrimaryDark</item>
+        <item name="boxStrokeColor">@color/mtrl_textinput_default_box_stroke_color</item>
+        <item name="boxStrokeWidth">0dp</item>
     </style>
 </resources>
