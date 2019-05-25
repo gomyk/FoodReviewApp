@@ -60,6 +60,7 @@ public class WriteReviewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mImageList.clear();
+                mPagerAdapter.setImageResource(mImageList);
                 mPagerAdapter.notifyDataSetChanged();
                 openGallery(CommonContracts.REVIEW_IMAGE_SELECT);
             }

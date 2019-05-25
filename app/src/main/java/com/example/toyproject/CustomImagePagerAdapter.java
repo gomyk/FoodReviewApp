@@ -2,19 +2,22 @@ package com.example.toyproject;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.example.toyproject.utils.ImageUtil;
+
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
 class CustomImagePagerAdapter extends PagerAdapter {
-
+    final String TAG = "CustomImagePagerAdapter";
     Context mContext;
     LayoutInflater mLayoutInflater;
     List<Uri> mResources;
@@ -35,6 +38,11 @@ class CustomImagePagerAdapter extends PagerAdapter {
     }
 
     @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
+    @Override
     public boolean isViewFromObject(View view, Object object) {
         return view == ((LinearLayout) object);
     }
@@ -43,7 +51,14 @@ class CustomImagePagerAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         View itemView = mLayoutInflater.inflate(R.layout.pager_item, container, false);
         ImageView imageView = (ImageView) itemView.findViewById(R.id.review_imageView);
-        imageView.setImageURI(mResources.get(position));
+        try{
+            imageView.setImageBitmap(ImageUtil.decodeUriWithResize(mContext,mResources.get(position),256));
+        } catch(FileNotFoundException e){
+            e.printStackTrace();
+        } finally{
+            Log.d(TAG,"ImageLoaded : " +mResources.get(position));
+        }
+
         container.addView(itemView);
         return itemView;
     }
