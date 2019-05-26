@@ -2,8 +2,8 @@ package com.example.toyproject;
 
 
 import android.Manifest;
-import android.app.Activity;
 import android.arch.persistence.room.Room;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -30,6 +30,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.transition.ChangeBounds;
 import android.transition.TransitionManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -40,6 +41,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.toyproject.AccountManager.DialogBuilder;
 import com.example.toyproject.AccountManager.LoginActivity;
 import com.example.toyproject.AccountManager.UserAccountDataHolder;
 import com.example.toyproject.Database.ReveiwDatabase;
@@ -54,6 +56,7 @@ import com.kakao.usermgmt.callback.LogoutResponseCallback;
 
 
 import java.io.InputStream;
+import java.security.MessageDigest;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -150,36 +153,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mLoginText = navigationView.getHeaderView(0).findViewById(R.id.login_text);
         mLoginText.setOnClickListener(view -> {
             if (mIsLoggedIn) {
-                UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
-                    @Override
-                    public void onSuccess(Long result) {
-                        onClickLogout();
-                    }
-                    @Override
-                    public void onCompleteLogout() {
+                DialogBuilder logoutDialogBuilder = new DialogBuilder(this);
+                setLogoutDialog(logoutDialogBuilder);
+                logoutDialogBuilder.create().show();
 
-                    }
-                });
             } else {
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivityForResult(intent, CommonContracts.LOGIN_ACTIVITY_REQUEST);
             }
         });
 
-        //Getting Hash Key (Now only debug version)
-
-//        try {
-//            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
-//            for (Signature signature : info.signatures) {
-//                MessageDigest md;
-//                md = MessageDigest.getInstance("SHA");
-//                md.update(signature.toByteArray());
-//                String keyHash = new String(Base64.encode(md.digest(), 0));
-//                Log.i("@@TEST", keyHash);
-//            }
-//        } catch (Exception e) {
-//            Log.e("name not found", e.toString());
-//        }
     }
     private void onClickLogout() {
         Toast.makeText(this, "Log out complete !", Toast.LENGTH_SHORT).show();
@@ -301,6 +284,54 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         user_email.setText(UserAccountDataHolder.sNickName);
         mLoginText.setText("Log Out");
     }
+
+    private void setLogoutDialog(DialogBuilder logoutDialogBuilder) {
+        DialogInterface.OnClickListener positiveListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+                    @Override
+                    public void onSuccess(Long result) {
+                        onClickLogout();
+                    }
+                    @Override
+                    public void onCompleteLogout() {
+
+                    }
+                });
+            }
+        };
+        DialogInterface.OnClickListener negativeListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        };
+
+        logoutDialogBuilder.setMessage("Are you sure that you want to log out?")
+                .setTitle("Logout")
+                .setPositiveButton(R.string.button_ok, positiveListener)
+                .setNegativeButton(R.string.button_cancel, negativeListener);
+
+    }
+
+    private void gethashkey() {
+//        Getting Hash Key (Now only debug version)
+
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md;
+                md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String keyHash = new String(Base64.encode(md.digest(), 0));
+                Log.i("@@TEST", keyHash);
+            }
+        } catch (Exception e) {
+            Log.e("name not found", e.toString());
+        }
+    }
+
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;

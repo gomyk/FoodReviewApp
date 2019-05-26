@@ -87,14 +87,14 @@ public class DialogBuilder {
                 container.addView(contentView);
             }
 
-            Button positiveBtn = (Button) findViewById(R.id.bt_right);
+            Button positiveBtn = (Button) findViewById(R.id.bt_popup_positive);
             if (positiveBtnText != null && positiveBtnText.length() > 0) {
                 positiveBtn.setText(positiveBtnText);
             } else {
                 positiveBtn.setVisibility(View.GONE);
             }
 
-            Button negativeBtn = (Button) findViewById(R.id.bt_left);
+            Button negativeBtn = (Button) findViewById(R.id.bt_popup_negative);
             if (negativeBtnText != null && negativeBtnText.length() > 0) {
                 negativeBtn.setText(negativeBtnText);
             } else {

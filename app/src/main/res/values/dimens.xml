@@ -44,14 +44,14 @@
     <!-- pop up dimens -->
     <dimen name="popup_width">300dp</dimen>
 
+    <dimen name="popup_title_text_margin_start">30dp</dimen>
     <dimen name="popup_title_text_size">18sp</dimen>
     <dimen name="popup_content_text_size">16sp</dimen>
 
     <dimen name="popup_content_max_height">400dp</dimen>
 
     <dimen name="popup_content_horizontal_padding">25dp</dimen>
-    <dimen name="popup_content_top_padding">30dp</dimen>
-    <dimen name="popup_content_bottom_padding">15dp</dimen>
+    <dimen name="popup_content_vertical_padding">15dp</dimen>
 
     <dimen name="popup_button_height">57dp</dimen>
 
