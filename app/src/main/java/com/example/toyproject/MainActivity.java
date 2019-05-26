@@ -3,6 +3,7 @@ package com.example.toyproject;
 
 import android.Manifest;
 import android.app.Activity;
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -29,27 +30,25 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.transition.ChangeBounds;
 import android.transition.TransitionManager;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AnticipateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.toyproject.AccountManager.LoginActivity;
 import com.example.toyproject.AccountManager.UserAccountDataHolder;
+import com.example.toyproject.Database.ReveiwDatabase;
 import com.example.toyproject.RecyclerView.CustomRecyclerView;
 import com.example.toyproject.utils.CommonContextHolder;
 import com.example.toyproject.utils.CommonContracts;
+import com.example.toyproject.utils.ReviewDataManager;
 
 
 import java.io.InputStream;
-import java.security.MessageDigest;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -66,6 +65,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ReviewDataManager.sDatabase = Room.databaseBuilder(this, ReveiwDatabase.class, "testDB")
+                .allowMainThreadQueries()
+                .build();
         CommonContextHolder.setContext(this);
         CommonContextHolder.setRecyclerViewVisible(false);
         sharedPreferences = this.getSharedPreferences("sfile", MODE_PRIVATE);
@@ -89,27 +91,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mMapViewManager = new MapViewManager((ViewGroup) findViewById(R.id.mapView));
         mMapViewManager.setCustomMapViewListener(new MapViewManager.MapViewCustomListener() {
             @Override
-            public void onPoiTouched(boolean recyclerViewVisible) {
-                ConstraintSet constraintSet = new ConstraintSet();
-                constraintSet.clone(mContentMain);
-
-                if (recyclerViewVisible) {
-                    constraintSet.connect(R.id.recyclerViewLayout, ConstraintSet.TOP, R.id.content_main, ConstraintSet.BOTTOM, 0);
-                } else {
-                    constraintSet.connect(R.id.recyclerViewLayout, ConstraintSet.TOP, R.id.recyler_guideline, ConstraintSet.BOTTOM, 0);
-                }
-                ChangeBounds transition = new ChangeBounds();
-                transition.setInterpolator(new AccelerateInterpolator());
-                transition.setDuration(500);
-                TransitionManager.beginDelayedTransition(mContentMain, transition);
-                constraintSet.applyTo(mContentMain);
-                CommonContextHolder.setRecyclerViewVisible(!recyclerViewVisible);
+            public void onPoiTouched() {
+                setRecyclerViewVisibility(true);
             }
 
             @Override
-            public void onCalloutBallounTouched() {
+            public void onCalloutBallounTouched(double lon, double lat) {
                 Intent intent = new Intent(getApplicationContext(), WriteReviewActivity.class);
+                intent.putExtra("longitude", lon);
+                intent.putExtra("lat", lat);
                 startActivityForResult(intent, CommonContracts.REVIEW_WRITE_ACTIVITY);
+            }
+
+            @Override
+            public void onFingerOnMap() {
+                setRecyclerViewVisibility(false);
             }
         });
         if (isPermissionGranted()) {
@@ -170,7 +166,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        }
 
     }
-
+    void setRecyclerViewVisibility(boolean visible){
+        if(CommonContextHolder.getRecyclerViewVisible() == visible){
+            return;
+        }
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(mContentMain);
+        if (!visible) {
+            constraintSet.connect(R.id.recyclerViewLayout, ConstraintSet.TOP, R.id.content_main, ConstraintSet.BOTTOM, 0);
+        } else {
+            constraintSet.connect(R.id.recyclerViewLayout, ConstraintSet.TOP, R.id.recyler_guideline, ConstraintSet.BOTTOM, 0);
+        }
+        ChangeBounds transition = new ChangeBounds();
+        transition.setInterpolator(new AccelerateInterpolator());
+        transition.setDuration(500);
+        TransitionManager.beginDelayedTransition(mContentMain, transition);
+        constraintSet.applyTo(mContentMain);
+        CommonContextHolder.setRecyclerViewVisible(!visible);
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

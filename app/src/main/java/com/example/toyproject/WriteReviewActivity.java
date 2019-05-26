@@ -1,6 +1,8 @@
 package com.example.toyproject;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -12,13 +14,17 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
+import com.example.toyproject.AccountManager.UserAccountDataHolder;
+import com.example.toyproject.Database.ReviewItem;
+import com.example.toyproject.Database.ReviewItemDao;
 import com.example.toyproject.utils.CommonContracts;
-import com.google.android.gms.common.internal.service.Common;
+import com.example.toyproject.utils.ReviewDataManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class WriteReviewActivity extends AppCompatActivity {
+    private Context mContext;
     private RatingBar mRatingBar;
     private float mRating;
     private Button mSubmitButton;
@@ -33,6 +39,7 @@ public class WriteReviewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write_review);
+        mContext = this;
         mImageList = new ArrayList<>();
         mRatingBar = findViewById(R.id.menu_rating);
         mMenuTitle = findViewById(R.id.menu_review_name);
@@ -77,9 +84,28 @@ public class WriteReviewActivity extends AppCompatActivity {
     }
 
     private void checkValidationAndSubmit() {
+        //Save in room
 
+        ReviewItemDao itemDAO = ReviewDataManager.sDatabase.getItemDAO();
+        ReviewItem item = new ReviewItem();
+        item.setAuthor(UserAccountDataHolder.sId);
+        item.setTitle(mMenuTitle.getText().toString());
+        item.setComment(mMenuComment.getText().toString());
+        item.setRating(mRatingBar.getRating());
+        item.setImages(convertUriListToStringList(mImageList));
+        item.setLongitude(getIntent().getExtras().getDouble("longitude"));
+        item.setLatitude(getIntent().getExtras().getDouble("latitude"));
+        itemDAO.insert(item);
+        finish();
     }
 
+    private List<String> convertUriListToStringList(List<Uri> uriList){
+        List<String> ret = new ArrayList<>();
+        for(int i=0;i<uriList.size();++i){
+            ret.add(uriList.get(i).toString());
+        }
+        return ret;
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -92,10 +118,11 @@ public class WriteReviewActivity extends AppCompatActivity {
                             size = 5;
                         }
                         for (int i = 0; i < size; ++i) {
-                            mImageList.add(data.getClipData().getItemAt(i).getUri());
+                                mImageList.add(data.getClipData().getItemAt(i).getUri());
+
                         }
                     } else {
-                        mImageList.add(data.getData());
+                        data.getData();
                     }
                     mPagerAdapter.setImageResource(mImageList);
                     mPagerAdapter.notifyDataSetChanged();
