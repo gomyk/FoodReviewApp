@@ -119,10 +119,9 @@ public class WriteReviewActivity extends AppCompatActivity {
                         }
                         for (int i = 0; i < size; ++i) {
                                 mImageList.add(data.getClipData().getItemAt(i).getUri());
-
                         }
                     } else {
-                        data.getData();
+                        mImageList.add(data.getData());
                     }
                     mPagerAdapter.setImageResource(mImageList);
                     mPagerAdapter.notifyDataSetChanged();
