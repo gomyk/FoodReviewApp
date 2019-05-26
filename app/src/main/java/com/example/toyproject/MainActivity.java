@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(mContentMain);
         if (!visible) {
-            constraintSet.connect(R.id.recyclerViewLayout, ConstraintSet.TOP, R.id.content_main, ConstraintSet.BOTTOM, 0);
+            constraintSet.connect(R.id.recyclerViewLayout, ConstraintSet.TOP, R.id.mapView, ConstraintSet.BOTTOM, 0);
         } else {
             constraintSet.connect(R.id.recyclerViewLayout, ConstraintSet.TOP, R.id.recyler_guideline, ConstraintSet.BOTTOM, 0);
         }
