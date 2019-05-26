@@ -51,8 +51,6 @@ import com.example.toyproject.utils.ReviewDataManager;
 
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -92,7 +90,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mRecyclerViewGroup = findViewById(R.id.recyclerViewLayout);
         mCustomRecyclerView = new CustomRecyclerView((RecyclerView) findViewById(R.id.recyclerView));
         mCustomRecyclerView.Initialize();
-
+        mCustomRecyclerView.setRecyclerViewListener(new CustomRecyclerView.RecyclerViewListener() {
+            @Override
+            public void onItemTouched(ReviewItem item) {
+                mMapViewManager.addLocationMarker(item.getLongitude(), item.getLatitude());
+            }
+        });
         mMapViewManager = new MapViewManager((ViewGroup) findViewById(R.id.mapView));
         mMapViewManager.setCustomMapViewListener(new MapViewManager.MapViewCustomListener() {
             @Override
@@ -105,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onCalloutBallounTouched(double lon, double lat) {
                 Intent intent = new Intent(getApplicationContext(), WriteReviewActivity.class);
                 intent.putExtra("longitude", lon);
-                intent.putExtra("lat", lat);
+                intent.putExtra("latitude", lat);
                 startActivityForResult(intent, CommonContracts.REVIEW_WRITE_ACTIVITY);
             }
 
@@ -171,8 +174,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //            Log.e("name not found", e.toString());
 //        }
     }
-    void setRecyclerViewVisibility(boolean visible){
-        if(CommonContextHolder.getRecyclerViewVisible() != visible){
+
+    void setRecyclerViewVisibility(boolean visible) {
+        if (CommonContextHolder.getRecyclerViewVisible() != visible) {
             return;
         }
         ConstraintSet constraintSet = new ConstraintSet();
@@ -189,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         constraintSet.applyTo(mContentMain);
         CommonContextHolder.setRecyclerViewVisible(!visible);
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -254,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
             case CommonContracts.REVIEW_WRITE_ACTIVITY: {
-                if(resultCode == CommonContracts.SUCCESS){
+                if (resultCode == CommonContracts.SUCCESS) {
                     ReviewItemDao itemDAO = ReviewDataManager.sDatabase.getItemDAO();
                     mCustomRecyclerView.setDataSet(itemDAO.getItems());
                 }

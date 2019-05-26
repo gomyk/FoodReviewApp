@@ -20,10 +20,14 @@ public class CustomRecyclerView {
     protected RecyclerView mRecyclerView;
     protected CustomRecyclerViewAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
-
+    private RecyclerViewListener mRecyclerViewListener;
     public CustomRecyclerView(RecyclerView recyclerView) {
         mRecyclerView = recyclerView;
         mLayoutManager = new LinearLayoutManager(CommonContextHolder.getContext());
+    }
+
+    public void setRecyclerViewListener(RecyclerViewListener recyclerViewListener) {
+        mRecyclerViewListener = recyclerViewListener;
     }
 
     public void Initialize() {
@@ -32,8 +36,15 @@ public class CustomRecyclerView {
             @Override
             public void run() {
                 mAdapter = new CustomRecyclerViewAdapter();
+                mAdapter.setRecyclerViewAdapterListener(new CustomRecyclerViewAdapter.RecyclerViewAdapterListener() {
+                    @Override
+                    public void onItemTouched(ReviewItem item) {
+                        mRecyclerViewListener.onItemTouched(item);
+                    }
+                });
                 mRecyclerView.setAdapter(mAdapter);
                 mRecyclerView.setLayoutManager(mLayoutManager);
+
             }
         });
     }
@@ -49,5 +60,8 @@ public class CustomRecyclerView {
     public void setDataSet(List<ReviewItem> reviewItemList) {
         mAdapter.setData(reviewItemList);
 
+    }
+    public interface RecyclerViewListener {
+        public void onItemTouched(ReviewItem item);
     }
 }

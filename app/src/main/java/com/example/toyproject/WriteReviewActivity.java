@@ -85,7 +85,6 @@ public class WriteReviewActivity extends AppCompatActivity {
 
     private void checkValidationAndSubmit() {
         //Save in room
-
         ReviewItemDao itemDAO = ReviewDataManager.sDatabase.getItemDAO();
         ReviewItem item = new ReviewItem();
         item.setAuthor(UserAccountDataHolder.sId);

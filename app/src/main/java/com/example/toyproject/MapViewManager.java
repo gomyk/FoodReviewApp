@@ -37,6 +37,17 @@ public class MapViewManager implements MapView.POIItemEventListener , MapView.Ma
         marker.setShowCalloutBalloonOnTouch(true);
         mMapView.addPOIItem(marker);
     }
+    public void  addLocationMarker(double lon, double lat) {
+        mMapView.removeAllPOIItems();
+        mMapView.setMapCenterPointAndZoomLevel(MapPoint.mapPointWithGeoCoord(lat, lon), 1, true);
+        MapPOIItem marker = new MapPOIItem();
+        marker.setItemName("Default Marker");
+        marker.setTag(0);
+        marker.setMapPoint(MapPoint.mapPointWithGeoCoord(lat, lon));
+        marker.setMarkerType(MapPOIItem.MarkerType.BluePin);
+        marker.setShowCalloutBalloonOnTouch(true);
+        mMapView.addPOIItem(marker);
+    }
 
     public void updateCurrentLocation() {
         locationInfoProvider.getLocation();
