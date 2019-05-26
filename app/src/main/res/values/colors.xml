@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <color name="colorPrimary">#FFF5cc</color>
+    <color name="colorPrimaryDark">#FFD633</color>
+    <color name="colorAccent">#FF9A03</color>
     <color name="colorTextBlack">#2A2A2A</color>
     <color name="colorTextGray">#B2B2B2</color>
     <color name="colorGray">#E5E5E5</color>
@@ -22,4 +22,6 @@
 
     <!-- spinner color -->
     <color name="spinner_menu_text">@color/colorTextBlack</color>
+
+    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">@color/colorPrimaryDark</color>
 </resources>

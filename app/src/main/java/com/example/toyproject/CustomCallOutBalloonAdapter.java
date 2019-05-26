@@ -1,5 +1,6 @@
 package com.example.toyproject;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,9 +23,6 @@ public class CustomCallOutBalloonAdapter implements CalloutBalloonAdapter {
 
     @Override
     public View getCalloutBalloon(MapPOIItem poiItem) {
-        ((ImageView) mCalloutBalloon.findViewById(R.id.badge)).setImageResource(R.drawable.ic_launcher_background);
-        ((TextView) mCalloutBalloon.findViewById(R.id.title)).setText(poiItem.getItemName());
-        ((TextView) mCalloutBalloon.findViewById(R.id.desc)).setText("Custom CalloutBalloon");
         return mCalloutBalloon;
     }
 

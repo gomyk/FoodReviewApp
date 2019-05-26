@@ -101,6 +101,7 @@ public class SignUpActivity extends Activity {
                 if (result.hasSignedUp() == OptionalBoolean.FALSE) {
                     showSignup();
                 } else {
+                    UserAccountDataHolder.setId(result.getId());
                     UserAccountDataHolder.setNickName(result.getNickname());
                     UserAccountDataHolder.setProfileImagePath(result.getProfileImagePath());
                     UserAccountDataHolder.setThumbnailPath(result.getThumbnailImagePath());

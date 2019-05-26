@@ -3,6 +3,7 @@ package com.example.toyproject;
 
 import android.Manifest;
 import android.app.Activity;
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -29,27 +30,30 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.transition.ChangeBounds;
 import android.transition.TransitionManager;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AnticipateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.toyproject.AccountManager.LoginActivity;
 import com.example.toyproject.AccountManager.UserAccountDataHolder;
+import com.example.toyproject.Database.ReveiwDatabase;
+import com.example.toyproject.Database.ReviewItem;
+import com.example.toyproject.Database.ReviewItemDao;
 import com.example.toyproject.RecyclerView.CustomRecyclerView;
 import com.example.toyproject.utils.CommonContextHolder;
 import com.example.toyproject.utils.CommonContracts;
+import com.example.toyproject.utils.ReviewDataManager;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
 
 
 import java.io.InputStream;
-import java.security.MessageDigest;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -66,8 +70,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ReviewDataManager.sDatabase = Room.databaseBuilder(this, ReveiwDatabase.class, "testDB")
+                .allowMainThreadQueries()
+                .build();
         CommonContextHolder.setContext(this);
-        CommonContextHolder.setRecyclerViewVisible(false);
+        CommonContextHolder.setRecyclerViewVisible(true);
         sharedPreferences = this.getSharedPreferences("sfile", MODE_PRIVATE);
         CommonContextHolder.setLoginMethod(sharedPreferences.getString("LoginMethod", "NotLogin"));
 
@@ -86,24 +93,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mRecyclerViewGroup = findViewById(R.id.recyclerViewLayout);
         mCustomRecyclerView = new CustomRecyclerView((RecyclerView) findViewById(R.id.recyclerView));
         mCustomRecyclerView.Initialize();
+        mCustomRecyclerView.setRecyclerViewListener(new CustomRecyclerView.RecyclerViewListener() {
+            @Override
+            public void onItemTouched(ReviewItem item) {
+                mMapViewManager.addLocationMarker(item.getLongitude(), item.getLatitude());
+            }
+        });
         mMapViewManager = new MapViewManager((ViewGroup) findViewById(R.id.mapView));
         mMapViewManager.setCustomMapViewListener(new MapViewManager.MapViewCustomListener() {
             @Override
-            public void onPoiTouched(boolean recyclerViewVisible) {
-                ConstraintSet constraintSet = new ConstraintSet();
-                constraintSet.clone(mContentMain);
+            public void onPoiTouched() {
+                setRecyclerViewVisibility(true);
+                mCustomRecyclerView.setDataSet(ReviewDataManager.sDatabase.getItemDAO().getItems());
+            }
 
-                if (recyclerViewVisible) {
-                    constraintSet.connect(R.id.recyclerViewLayout, ConstraintSet.TOP, R.id.content_main, ConstraintSet.BOTTOM, 0);
-                } else {
-                    constraintSet.connect(R.id.recyclerViewLayout, ConstraintSet.TOP, R.id.recyler_guideline, ConstraintSet.BOTTOM, 0);
-                }
-                ChangeBounds transition = new ChangeBounds();
-                transition.setInterpolator(new AccelerateInterpolator());
-                transition.setDuration(1000);
-                TransitionManager.beginDelayedTransition(mContentMain,transition);
-                constraintSet.applyTo(mContentMain);
-                CommonContextHolder.setRecyclerViewVisible(!recyclerViewVisible);
+            @Override
+            public void onCalloutBallounTouched(double lon, double lat) {
+                Intent intent = new Intent(getApplicationContext(), WriteReviewActivity.class);
+                intent.putExtra("longitude", lon);
+                intent.putExtra("latitude", lat);
+                startActivityForResult(intent, CommonContracts.REVIEW_WRITE_ACTIVITY);
+            }
+
+            @Override
+            public void onFingerOnMap() {
+                setRecyclerViewVisibility(false);
             }
         });
         if (isPermissionGranted()) {
@@ -136,18 +150,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mLoginText = navigationView.getHeaderView(0).findViewById(R.id.login_text);
         mLoginText.setOnClickListener(view -> {
             if (mIsLoggedIn) {
-                mIsLoggedIn = false;
-                mLoginText.setText("Log In");
-                ImageView user_icon = findViewById(R.id.user_icon);
-                TextView user_email = findViewById(R.id.user_email);
-                user_icon.setImageResource(R.drawable.googleg_standard_color_18);
-                user_email.setText(R.string.nav_header_subtitle);
-                setLoginCache("NotLogin");
+                UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+                    @Override
+                    public void onSuccess(Long result) {
+                        onClickLogout();
+                    }
+                    @Override
+                    public void onCompleteLogout() {
+
+                    }
+                });
             } else {
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivityForResult(intent, CommonContracts.LOGIN_ACTIVITY_REQUEST);
             }
         });
+
         //Getting Hash Key (Now only debug version)
 
 //        try {
@@ -162,7 +180,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        } catch (Exception e) {
 //            Log.e("name not found", e.toString());
 //        }
-
+    }
+    private void onClickLogout() {
+        Toast.makeText(this, "Log out complete !", Toast.LENGTH_SHORT).show();
+        mIsLoggedIn = false;
+        mLoginText.setText("Log In");
+        ImageView user_icon = findViewById(R.id.user_icon);
+        TextView user_email = findViewById(R.id.user_email);
+        user_icon.setImageResource(R.drawable.user_icon);
+        user_email.setText(R.string.nav_header_subtitle);
+        setLoginCache("NotLogin");
+    }
+    void setRecyclerViewVisibility(boolean visible) {
+        if (CommonContextHolder.getRecyclerViewVisible() != visible) {
+            return;
+        }
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(mContentMain);
+        if (!visible) {
+            constraintSet.connect(R.id.recyclerViewLayout, ConstraintSet.TOP, R.id.mapView, ConstraintSet.BOTTOM, 0);
+        } else {
+            constraintSet.connect(R.id.recyclerViewLayout, ConstraintSet.TOP, R.id.recyler_guideline, ConstraintSet.BOTTOM, 0);
+        }
+        ChangeBounds transition = new ChangeBounds();
+        transition.setInterpolator(new AccelerateInterpolator());
+        transition.setDuration(500);
+        TransitionManager.beginDelayedTransition(mContentMain, transition);
+        constraintSet.applyTo(mContentMain);
+        CommonContextHolder.setRecyclerViewVisible(!visible);
     }
 
     @Override
@@ -227,6 +272,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     mIsLoggedIn = true;
                     setLoginCache("kakaotalk");
                     setUserInfo();
+                }
+            }
+            case CommonContracts.REVIEW_WRITE_ACTIVITY: {
+                if (resultCode == CommonContracts.SUCCESS) {
+                    ReviewItemDao itemDAO = ReviewDataManager.sDatabase.getItemDAO();
+                    mCustomRecyclerView.setDataSet(itemDAO.getItems());
                 }
             }
         }

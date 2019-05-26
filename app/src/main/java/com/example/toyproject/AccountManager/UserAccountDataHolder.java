@@ -3,10 +3,15 @@ package com.example.toyproject.AccountManager;
 import java.util.Map;
 
 public class UserAccountDataHolder {
+    public static long sId = 0;
     public static String sNickName = null;
     public static String sProfileImagePath = null;
     public static String sThumbnailPath = null;
     public static Map<String, String> sUserProperty;
+
+    public static void setId(long id) {
+        UserAccountDataHolder.sId = id;
+    }
 
     public static void setNickName(String nickName) {
         UserAccountDataHolder.sNickName = nickName;
