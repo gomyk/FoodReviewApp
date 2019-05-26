@@ -38,6 +38,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.toyproject.AccountManager.LoginActivity;
 import com.example.toyproject.AccountManager.UserAccountDataHolder;
@@ -48,6 +49,8 @@ import com.example.toyproject.RecyclerView.CustomRecyclerView;
 import com.example.toyproject.utils.CommonContextHolder;
 import com.example.toyproject.utils.CommonContracts;
 import com.example.toyproject.utils.ReviewDataManager;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
 
 
 import java.io.InputStream;
@@ -147,18 +150,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mLoginText = navigationView.getHeaderView(0).findViewById(R.id.login_text);
         mLoginText.setOnClickListener(view -> {
             if (mIsLoggedIn) {
-                mIsLoggedIn = false;
-                mLoginText.setText("Log In");
-                ImageView user_icon = findViewById(R.id.user_icon);
-                TextView user_email = findViewById(R.id.user_email);
-                user_icon.setImageResource(R.drawable.user_icon);
-                user_email.setText(R.string.nav_header_subtitle);
-                setLoginCache("NotLogin");
+                UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+                    @Override
+                    public void onSuccess(Long result) {
+                        onClickLogout();
+                    }
+                    @Override
+                    public void onCompleteLogout() {
+
+                    }
+                });
             } else {
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivityForResult(intent, CommonContracts.LOGIN_ACTIVITY_REQUEST);
             }
         });
+
         //Getting Hash Key (Now only debug version)
 
 //        try {
@@ -174,7 +181,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //            Log.e("name not found", e.toString());
 //        }
     }
-
+    private void onClickLogout() {
+        Toast.makeText(this, "Log out complete !", Toast.LENGTH_SHORT).show();
+        mIsLoggedIn = false;
+        mLoginText.setText("Log In");
+        ImageView user_icon = findViewById(R.id.user_icon);
+        TextView user_email = findViewById(R.id.user_email);
+        user_icon.setImageResource(R.drawable.user_icon);
+        user_email.setText(R.string.nav_header_subtitle);
+        setLoginCache("NotLogin");
+    }
     void setRecyclerViewVisibility(boolean visible) {
         if (CommonContextHolder.getRecyclerViewVisible() != visible) {
             return;
