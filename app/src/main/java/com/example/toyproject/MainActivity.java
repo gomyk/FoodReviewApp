@@ -42,6 +42,8 @@ import android.widget.TextView;
 import com.example.toyproject.AccountManager.LoginActivity;
 import com.example.toyproject.AccountManager.UserAccountDataHolder;
 import com.example.toyproject.Database.ReveiwDatabase;
+import com.example.toyproject.Database.ReviewItem;
+import com.example.toyproject.Database.ReviewItemDao;
 import com.example.toyproject.RecyclerView.CustomRecyclerView;
 import com.example.toyproject.utils.CommonContextHolder;
 import com.example.toyproject.utils.CommonContracts;
@@ -49,6 +51,8 @@ import com.example.toyproject.utils.ReviewDataManager;
 
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -69,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .allowMainThreadQueries()
                 .build();
         CommonContextHolder.setContext(this);
-        CommonContextHolder.setRecyclerViewVisible(false);
+        CommonContextHolder.setRecyclerViewVisible(true);
         sharedPreferences = this.getSharedPreferences("sfile", MODE_PRIVATE);
         CommonContextHolder.setLoginMethod(sharedPreferences.getString("LoginMethod", "NotLogin"));
 
@@ -88,11 +92,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mRecyclerViewGroup = findViewById(R.id.recyclerViewLayout);
         mCustomRecyclerView = new CustomRecyclerView((RecyclerView) findViewById(R.id.recyclerView));
         mCustomRecyclerView.Initialize();
+
         mMapViewManager = new MapViewManager((ViewGroup) findViewById(R.id.mapView));
         mMapViewManager.setCustomMapViewListener(new MapViewManager.MapViewCustomListener() {
             @Override
             public void onPoiTouched() {
                 setRecyclerViewVisibility(true);
+                mCustomRecyclerView.setDataSet(ReviewDataManager.sDatabase.getItemDAO().getItems());
             }
 
             @Override
@@ -142,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 mLoginText.setText("Log In");
                 ImageView user_icon = findViewById(R.id.user_icon);
                 TextView user_email = findViewById(R.id.user_email);
-                user_icon.setImageResource(R.drawable.googleg_standard_color_18);
+                user_icon.setImageResource(R.drawable.user_icon);
                 user_email.setText(R.string.nav_header_subtitle);
                 setLoginCache("NotLogin");
             } else {
@@ -164,10 +170,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        } catch (Exception e) {
 //            Log.e("name not found", e.toString());
 //        }
-
     }
     void setRecyclerViewVisibility(boolean visible){
-        if(CommonContextHolder.getRecyclerViewVisible() == visible){
+        if(CommonContextHolder.getRecyclerViewVisible() != visible){
             return;
         }
         ConstraintSet constraintSet = new ConstraintSet();
@@ -246,6 +251,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     mIsLoggedIn = true;
                     setLoginCache("kakaotalk");
                     setUserInfo();
+                }
+            }
+            case CommonContracts.REVIEW_WRITE_ACTIVITY: {
+                if(resultCode == CommonContracts.SUCCESS){
+                    ReviewItemDao itemDAO = ReviewDataManager.sDatabase.getItemDAO();
+                    mCustomRecyclerView.setDataSet(itemDAO.getItems());
                 }
             }
         }

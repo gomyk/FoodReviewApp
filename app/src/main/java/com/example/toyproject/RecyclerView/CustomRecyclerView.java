@@ -1,12 +1,15 @@
 package com.example.toyproject.RecyclerView;
 
 
+import android.graphics.Bitmap;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import com.example.toyproject.Database.ReviewItem;
 import com.example.toyproject.utils.CommonContextHolder;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -17,8 +20,6 @@ public class CustomRecyclerView {
     protected RecyclerView mRecyclerView;
     protected CustomRecyclerViewAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
-    protected String[] mDataset;
-    private static final int DATASET_COUNT = 60;
 
     public CustomRecyclerView(RecyclerView recyclerView) {
         mRecyclerView = recyclerView;
@@ -30,26 +31,23 @@ public class CustomRecyclerView {
         executorService.submit(new Runnable() {
             @Override
             public void run() {
-                initDataset();
-                mAdapter = new CustomRecyclerViewAdapter(mDataset);
+                mAdapter = new CustomRecyclerViewAdapter();
                 mRecyclerView.setAdapter(mAdapter);
                 mRecyclerView.setLayoutManager(mLayoutManager);
             }
         });
     }
 
-    public void setVisibility(boolean visibility){
-        if(visibility){
+    public void setVisibility(boolean visibility) {
+        if (visibility) {
             mRecyclerView.setVisibility(RecyclerView.VISIBLE);
-        } else{
+        } else {
             mRecyclerView.setVisibility(RecyclerView.INVISIBLE);
         }
     }
 
-    private void initDataset() {
-        mDataset = new String[DATASET_COUNT];
-        for (int i = 0; i < DATASET_COUNT; i++) {
-            mDataset[i] = "This is donghyun #" + i;
-        }
+    public void setDataSet(List<ReviewItem> reviewItemList) {
+        mAdapter.setData(reviewItemList);
+
     }
 }

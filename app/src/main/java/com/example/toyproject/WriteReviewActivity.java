@@ -96,6 +96,7 @@ public class WriteReviewActivity extends AppCompatActivity {
         item.setLongitude(getIntent().getExtras().getDouble("longitude"));
         item.setLatitude(getIntent().getExtras().getDouble("latitude"));
         itemDAO.insert(item);
+        setResult(CommonContracts.SUCCESS);
         finish();
     }
 
