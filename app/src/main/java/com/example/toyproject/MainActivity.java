@@ -293,12 +293,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void setUserInfo() {
         Menu menu = findViewById(R.id.nav_menu);
         onPrepareOptionsMenu(menu);
-        new DownloadImageTask((ImageView) findViewById(R.id.user_icon))
-                .execute(UserAccountDataHolder.sThumbnailPath);
-        ImageView user_icon = findViewById(R.id.user_icon);
+        if(!TextUtils.isEmpty(UserAccountDataHolder.sThumbnailPath)) {
+            new DownloadImageTask((ImageView) findViewById(R.id.user_icon))
+                    .execute(UserAccountDataHolder.sThumbnailPath);
+        }
+
         TextView user_email = findViewById(R.id.user_email);
-        user_icon.setImageResource(R.drawable.kimdonghyun_face);
         user_email.setText(UserAccountDataHolder.sNickName);
+
         mLoginText.setText("Log Out");
     }
 
